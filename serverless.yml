@@ -1,0 +1,28 @@
+service: my-express-application
+
+plugins:
+  - serverless-dotenv-plugin
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+  stage: dev
+  profile: smartpy
+  region: us-east-1
+  environment:
+    SENDGRID_API_KEY: SENDGRID_API_KEY
+
+functions:
+  app:
+    handler: index.handler
+    events:
+      - http: ANY /
+      - http: 'ANY {proxy+}'
+
+  send_email:
+    handler: index.handler
+    events:
+      - http:
+          path: api/send_email
+          method: post
+          cors: true
